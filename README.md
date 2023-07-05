@@ -1,8 +1,8 @@
 # Star Imaging and Star Naming
 Authors:
-Yuval Ben Yaakov
-Amit Kubani
-Reut Hadad
+Yuval Ben Yaakov,
+Amit Kubani,
+Reut Hadad.
 
 # Introduction
 

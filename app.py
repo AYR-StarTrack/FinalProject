@@ -28,6 +28,7 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 ALLOWED_P = '.p'
 
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -125,17 +126,22 @@ def get_result(page, new_file_paths, file_urls):
         return render_template(page, file_urls=printoscreen)
     else:
         flash('You are only allowed to upload two files')
-        directory_path = 'static/upload_star_match_files/'  # Specify the directory path
-        # Get a list of files in the directory
-        file_list = os.listdir(directory_path)
-        # Iterate over the files and delete them
-        for file_name in file_list:
-            file_path = os.path.join(directory_path, file_name)
-            os.remove(file_path)
+        clean_old_matc_algo_files()
         return redirect(request.url)
 
 
+def clean_old_matc_algo_files():
+    directory_path = 'static/upload_star_match_files/'  # Specify the directory path
+    # Get a list of files in the directory
+    file_list = os.listdir(directory_path)
+    # Iterate over the files and delete them
+    for file_name in file_list:
+        file_path = os.path.join(directory_path, file_name)
+        os.remove(file_path)
+
+
 def upload_image(page):
+    clean_old_matc_algo_files()
     file_names = []
     Links = []
     if 'file' not in request.files:
@@ -151,13 +157,7 @@ def upload_image(page):
             file_names.append(filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         else:
-            directory_path = 'static/upload_star_match_files/'  # Specify the directory path
-            # Get a list of files in the directory
-            file_list = os.listdir(directory_path)
-            # Iterate over the files and delete them
-            for file_name in file_list:
-                file_path = os.path.join(directory_path, file_name)
-                os.remove(file_path)
+            clean_old_matc_algo_files()
             flash('Allowed image types are -> png, jpg, jpeg, gif')
             return redirect(request.url)
     directory_path = "static/upload_star_match_files/"

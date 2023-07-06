@@ -151,11 +151,9 @@
     <div class="photos-container" style="text-align: left; margin-bottom: 1rem;">
         <div class = "sub-header" style="margin-left: 2rem;">
                     Before Naming:</div>
-    {% for filename in filenames %}
         <div style="padding:20px;float:left;">
-            <img width="500" src="{{ url_for('display_image', filename=filename) }}">
+            <img width="500" src="{{ url_for('static', filename=filenames) }}">
         </div>
-    {% endfor %}
     </div>
         <div class="text-container" style="text-align: Left;padding-left: 300px;">
             <p>After Naming:</p>

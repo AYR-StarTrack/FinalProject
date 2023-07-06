@@ -11,26 +11,32 @@
 from flask import Flask, flash, request, redirect, url_for, render_template
 import urllib.request
 import os
-from werkzeug.utils import secure_filename
+from werkzeug.utils import secure_filename, send_from_directory
 import urllib.request
 
 from Algorithms import star_match
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = 'static/upload_star_match_files/'
+UPLOAD_MATCHING_FOLDER = 'static/upload_star_match_files/'
+UPLOAD_NAMING_FOLDER = 'static/upload_star_name_file/'
 
 app = Flask(__name__)
 app.secret_key = "cairocoders-ednalan"
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['UPLOAD_MATCHING_FOLDER'] = UPLOAD_MATCHING_FOLDER
+app.config['UPLOAD_NAMING_FOLDER'] = UPLOAD_NAMING_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
-ALLOWED_P = '.p'
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
+ALLOWED_FITS = '.jpg'
 
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def allowed_fits_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_FITS
 
 
 @app.route('/')
@@ -140,6 +146,16 @@ def clean_old_matc_algo_files():
         os.remove(file_path)
 
 
+def clean_old_name_algo_files():
+    directory_path = 'static/upload_star_name_file/'  # Specify the directory path
+    # Get a list of files in the directory
+    file_list = os.listdir(directory_path)
+    # Iterate over the files and delete them
+    for file_name in file_list:
+        file_path = os.path.join(directory_path, file_name)
+        os.remove(file_path)
+
+
 def upload_image(page):
     clean_old_matc_algo_files()
     file_names = []
@@ -155,7 +171,7 @@ def upload_image(page):
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file_names.append(filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            file.save(os.path.join(app.config['UPLOAD_MATCHING_FOLDER'], filename))
         else:
             clean_old_matc_algo_files()
             flash('Allowed image types are -> png, jpg, jpeg, gif')
@@ -186,25 +202,36 @@ def process_file(file):
 
 @app.route('/algo2', methods=['POST'])
 def upload_image_algo2():
-    file_names = []
+    clean_old_name_algo_files()
     if 'file' not in request.files:
+        clean_old_name_algo_files()
         flash('No file part')
         return redirect(request.url)
     files = request.files.getlist('file')
     if len(files) != 1:
+        clean_old_name_algo_files()
         flash("You are only allowed to upload 1 file")
         return render_template("algo2.html")
-    for file in files:
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file_names.append(filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        else:
-            flash('Allowed image types are -> png, jpg, jpeg, gif')
-            return redirect(request.url)
-    print("filename", filename)
-    return render_template("algo2.html", filenames=file_names)
+    file = files[0]
+    if file and allowed_fits_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_NAMING_FOLDER'], filename))
+    else:
+        clean_old_name_algo_files()
+        flash('Allowed image type is -> fits')
+        return redirect(request.url)
+    directory_path = "static/upload_star_name_file/"
+    direct_file_names = os.listdir(directory_path)
+    file = direct_file_names[0]
+    file_urls = []
+    file_path = os.path.join(directory_path, file)
+    file_url = urllib.parse.quote(file_path)
+    file_urls.append(file_url)
+    new_path = file_url.replace("static/", "", 1)
+    return render_template("algo2.html", filenames=new_path)
 
+
+# /static/upload_star_match_files/file0.jpg
 
 @app.route('/algo3', methods=['POST'])
 def upload_image_algo3():
@@ -218,6 +245,12 @@ def upload_image_algo4():
 
 @app.route('/display/<filename>')
 def display_image(filename):
+    # print('display_image filename: ' + filename)
+    return redirect(url_for('static', filename='upload_star_match_files/' + filename), code=301)
+
+
+@app.route('/display_star_name_image/<filename>')
+def display_star_name_image(filename):
     # print('display_image filename: ' + filename)
     return redirect(url_for('static', filename='upload_star_match_files/' + filename), code=301)
 

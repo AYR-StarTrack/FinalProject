@@ -57,12 +57,12 @@
               <div class="navbar-nav">
               <a class="nav-item nav-link" href="/">Star Name</a>
             </div>
-              <div class="navbar-nav">
-              <a class="nav-item nav-link" href="/">Algorithm 3</a>
-            </div>
-              <div class="navbar-nav">
-              <a class="nav-item nav-link" href="/">Algorithm 4</a>
-            </div>
+<!--              <div class="navbar-nav">-->
+<!--              <a class="nav-item nav-link" href="/">Algorithm 3</a>-->
+<!--            </div>-->
+<!--              <div class="navbar-nav">-->
+<!--              <a class="nav-item nav-link" href="/">Algorithm 4</a>-->
+<!--            </div>-->
             <!-- Navbar Right Side -->
           </div>
         </div>
@@ -131,21 +131,26 @@
 </div>
 
 <div class="container_merge" style="text-align: center">
-    {% if filenames %}
+
         <div class="photos-container">
+            {% if file_urls %}
             <div class = "sub-header" style="text-align: left; margin-bottom: 1rem;">
                     Before Matching:</div>
-            {% for filename in filenames %}
-                <div class="photo-frame" style="padding:20px;float:left;">
-                    <img width="500" src="{{ url_for('display_image', filename=filename) }}">
-                </div>
+            {% endif %}
+            {% for file_url in file_urls %}
+            <div class="photo-frame" style="padding:20px;float:left;">
+                    <img width="500" src="{{ url_for('static', filename=file_url) }}">
+            </div>
             {% endfor %}
         </div>
+    {% if file_urls %}
         <div class="text-container" style="text-align: Left">
             <p>After Matching:</p>
         </div>
+    {% endif %}
+    {% if file_urls %}
         <div class="photo-frame_button" style="float:left;">
-            <img style="alignment: left" src="{{ url_for('static', filename='../static/post_track/star_match_result.jpg') }}">
+            <img src="{{ url_for('static', filename='../static/post_track/star_match_result.jpg') }}">
         </div>
     {% endif %}
 </div>

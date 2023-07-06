@@ -1,3 +1,5 @@
+import os
+
 import cv2
 import numpy as np
 
@@ -57,7 +59,14 @@ def match_stars(image1, image2):
         pt1 = (int(kp1.pt[0]), int(kp1.pt[1]))
         pt2 = (int(kp2.pt[0]) + image1.shape[1], int(kp2.pt[1]))
         cv2.line(result, pt1, pt2, (0, 255, 0), thickness=4)
-    cv2.imwrite('../static/post_track/star_match_result.jpg', result)
+    # cv2.imwrite('../static/post_track/star_match_result.jpg', result)
+
+    current_script_path = os.path.dirname(os.path.abspath(__file__))
+    relative_file_path = '../static/post_track/star_match_result.jpg'
+    absolute_file_path = os.path.join(current_script_path, relative_file_path)
+    cv2.imwrite(absolute_file_path, result)
+    directory, filename = os.path.split(relative_file_path)
+    print(filename)
     # Display the result image
     # cv2.imshow("Star Matching", result)
     cv2.waitKey(0)
@@ -71,8 +80,12 @@ def calculate_triangle_similarity(kp1, kp2, kp3, kp4):
     return sim
 
 
-image1 = cv2.imread("../static/uploads/1.jpg")
-image2 = cv2.imread("../static/uploads/2.jpg")
-
-# Call the function to match stars between the images
-match_stars(image1, image2)
+def get_photos(Links):
+    image1 = cv2.imread(Links[0])
+    image2 = cv2.imread(Links[1])
+    print("Links[0]", Links[0])
+    print("Links[1]", Links[1])
+    print("image1", str(image1))
+    print("image2", str(image2))
+    # Call the function to match stars between the images
+    match_stars(image1, image2)

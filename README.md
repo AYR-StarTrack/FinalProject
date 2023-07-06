@@ -46,7 +46,7 @@ Here the user is required to upload two pictures of stars for the purpose of m
 
 On the second screen we upload a picture of stars of our choice and the location where the picture was taken. The algorithm emits a new image with the stars and their names by interfacing with the SIMBAD catalog.
 
-![Alt Text](Screenshots/NameAlgo.jpg)
+![Alt Text](Screenshots/named_algo_input.png)
 ![Alt Text](Screenshots/BeforeNaming.jpg)
 
 #### Reasults

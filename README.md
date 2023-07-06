@@ -21,8 +21,8 @@ another feature we implemented was star matching between 2 images, which uses De
 
 ## How to use
 
-1.  clone the repository and install all required dependencies.
-2.  run the app:
+1.  clone the repository and install all required dependencies including ```pip install opencv-python```
+3.  run the app:
    ``` Flask run ``` and follow the link on terminal.
 4.  choose either star-matching or star-naming options, insert the required fields and click on results button.
 

@@ -11,7 +11,7 @@
 from flask import Flask, flash, request, redirect, url_for, render_template
 import urllib.request
 import os
-from werkzeug.utils import secure_filename, send_from_directory
+from werkzeug.utils import secure_filename
 import urllib.request
 
 from Algorithms import star_match
